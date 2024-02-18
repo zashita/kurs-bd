@@ -32,10 +32,6 @@ export const ShipsListRow = (props: ShipListRowUI) => {
         </div>
       </Modal>
       <td className="table-item">
-        {props.position}
-      </td>
-
-      <td className="table-item">
         {props.ship.title}
       </td>
 
@@ -44,12 +40,16 @@ export const ShipsListRow = (props: ShipListRowUI) => {
       </td>
 
       <td className="table-item">
-        {props.ship.description}
+        {props.ship.location}
       </td>
 
       <td className="table-item">
         {props.ship.price}
       </td>
+
+      {/*<td className="table-item">*/}
+      {/*  {props.ship.price}*/}
+      {/*</td>*/}
 
       <td className="table-item">
         <button
@@ -61,5 +61,3 @@ export const ShipsListRow = (props: ShipListRowUI) => {
     </tr>
   )
 }
-
-

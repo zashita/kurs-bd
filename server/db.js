@@ -52,5 +52,42 @@ knex.select('*').from('ships')
   .then(data => console.log('data:', data))
   .catch(err => console.log(err))
 
+
+knex.schema
+  // Make sure no "ships" table exists
+  // before trying to create new
+  .hasTable('owners')
+  .then((exists) => {
+    if (!exists) {
+
+      return knex.schema.createTable('owners', (table)  => {
+        table.increments('id').primary()
+        table.string('name')
+        table.specificType('ships', 'INT[]')
+
+      })
+        .then(() => {
+          // Log success message
+          console.log('Table \'Ships\' created')
+        })
+        .catch((error) => {
+          console.error(`There was an error creating table: ${error}`)
+        })
+    }
+  })
+  .then(() => {
+    // Log success message
+    console.log('done')
+  })
+  .catch((error) => {
+    console.error(`There was an error setting up the database: ${error}`)
+  })
+
+// Just for debugging purposes:
+// Log all data in "ships" table
+knex.select('*').from('owners')
+  .then(data => console.log('data:', data))
+  .catch(err => console.log(err))
+
 // Export the database
 module.exports = knex

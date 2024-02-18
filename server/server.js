@@ -7,6 +7,7 @@ const helmet = require('helmet')
 
 // Import routes
 const shipsRouter = require('./routes/ships-route')
+const ownersRouter = require('./routes/owners-route')
 
 // Set default port for express app
 const PORT = process.env.PORT || 4001
@@ -24,6 +25,7 @@ app.use(bodyParser.json())
 
 // Implement ships route
 app.use('/ships', shipsRouter)
+app.use('/owners', ownersRouter)
 
 // Implement 500 error route
 app.use(function (err, req, res, next) {

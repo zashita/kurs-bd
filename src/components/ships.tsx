@@ -1,11 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import axios from 'axios'
 
 import { ShipsList } from './ships-list'
 
 import '../styles/ships.css'
+import {Modal} from "../ui/Modal/Modal";
+import {Owners} from "./owners/owners";
 
-export const Ships = () => {
+interface Ships{
+  state: boolean;
+  setState: () => void;
+}
+
+export const Ships = (props: Ships) => {
   const [owner, setOwner] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -15,9 +22,9 @@ export const Ships = () => {
   const [location, setLocation] = useState('')
   useEffect(() => {
     fetchShips()
-  }, [])
+  }, [props.state])
 
-  const fetchShips = async () => {
+   const fetchShips = async () => {
     axios
       .get('http://localhost:4001/ships/all')
       .then(response => {
@@ -84,6 +91,17 @@ export const Ships = () => {
     .catch(error => console.error(`There was an error resetting the ship list: ${error}`))
   }
 
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleModal = useCallback(() => {
+    setIsOpen((prevState) => !prevState);
+  }, [isOpen]);
+
+  const [isOpenLoc, setIsOpenLoc] = useState(false);
+  const toggleModalLoc = useCallback(() => {
+    setIsOpenLoc((prevState) => !prevState);
+  }, [isOpenLoc]);
+
+
   return (
     <div className="ship-list-wrapper">
       <div className="ship-list-form">
@@ -96,7 +114,24 @@ export const Ships = () => {
 
             <fieldset>
               <label className="form-label" htmlFor="owner">Enter owner:</label>
-              <input className="form-input" type="text" id="owner" name="owner" value={owner} onChange={(e) => setOwner(e.currentTarget.value)} />
+              <input
+                className="form-input"
+                type="text"
+                id="owner"
+                name="owner"
+                value={owner}
+                onClick={toggleModal}
+                onChange={toggleModal}/>
+              <Modal
+                isOpen={isOpen}
+                onClose={toggleModal}
+              >
+                <Owners
+                  setShipOwner={setOwner}
+                  shipOwner={owner}
+                  state={props.state}
+                  setState={props.setState}/>
+              </Modal>
             </fieldset>
           </div>
 
@@ -104,7 +139,68 @@ export const Ships = () => {
 
             <fieldset>
               <label className="form-label" htmlFor="location">Enter location:</label>
-              <input className="form-input" type="text" id="location" name="location" value={location} onChange={(e) => setLocation(e.currentTarget.value)} />
+              <input
+                className="form-input"
+                type="text"
+                id="location"
+                name="location"
+                value={location}
+                onChange={toggleModalLoc}
+                onClick={toggleModalLoc}
+              />
+              <Modal
+                isOpen={isOpenLoc}
+                onClose={toggleModalLoc}
+              >
+                  <table className={"table"}>
+                    <thead>
+                    <tr>
+                      <th className="table-head-item">Region</th>
+                    </tr>
+                    </thead>
+                    <tbody className="table-body">
+                      <tr className="table-row" onClick={() => setLocation('Минская область')}>
+                          <td className="table-item">
+                            Минская область
+                          </td>
+                      </tr>
+                      <tr className="table-row" onClick={() => setLocation('Брестская область')}>
+                        <td className="table-item">
+                          Брестская область
+                        </td>
+                      </tr>
+
+                      <tr className="table-row" onClick={() => setLocation('Гродненская область')}>
+                        <td className="table-item">
+                          Гродненская область
+                        </td>
+                      </tr>
+
+                      <tr className="table-row" onClick={() => setLocation('Витебская область')}>
+                        <td className="table-item">
+                          Витебская область
+                        </td>
+                      </tr>
+
+                      <tr className="table-row" onClick={() => setLocation('Могилевская область')}>
+                        <td className="table-item">
+                          Могилевская область
+                        </td>
+
+                      </tr>
+
+                      <tr className="table-row" onClick={() => setLocation('Гомельская область')}>
+                        <td className="table-item">
+                          Гомельская область
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+
+
+
+              </Modal>
             </fieldset>
 
             <fieldset>
@@ -120,7 +216,7 @@ export const Ships = () => {
           </div>
         </div>
 
-        <button onClick={handleShipSubmit} className="btn btn-add">Add the ship</button>
+        <button onClick={handleShipSubmit} className="btn btn-add">Add ship</button>
       </div>
 
       <ShipsList ships={ships} loading={loading} handleShipRemove={handleShipRemove} />

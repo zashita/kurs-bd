@@ -1,11 +1,11 @@
 import React from 'react'
 import { render } from 'react-dom'
 
-import { Ships } from './components/ships'
 
 import './styles/styles.css'
+import App from "./App";
 
 const rootElement = document.getElementById('root')
 
 // Render Ships component in the DOM
-render(<Ships />, rootElement)
+render(<App/>, rootElement)
